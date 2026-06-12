@@ -1,0 +1,126 @@
+# ────────────────────────────────────────────────────────────────────
+# JARVIS - Asistente de Escritorio Local en Windows
+# ────────────────────────────────────────────────────────────────────
+# Loop principal del asistente. Orquesta el flujo completo.
+# ────────────────────────────────────────────────────────────────────
+
+import sys
+import threading
+import nucleo
+from gui import crear_gui
+
+historial = []
+
+def inicializar_sistema():
+    """Inicializa todos los componentes del asistente."""
+    nucleo.logger.info("=" * 70)
+    nucleo.logger.info("INICIANDO JARVIS")
+    nucleo.logger.info("=" * 70)
+    try:
+        config = nucleo.cargar_config()
+        perfil = nucleo.cargar_perfil()
+        nucleo.logger.info(f"Configuración cargada: {config['modelo_ia']['tipo']}")
+        return True
+    except Exception as e:
+        nucleo.logger.error(f"Error inicializando sistema: {e}")
+        return False
+
+def loop_principal(gui=None):
+    """Loop principal del asistente."""
+    global historial
+
+    nucleo.hablar("Asistente iniciado. Decí hey Jarvis para activarme.")
+    if gui:
+        gui.actualizar_estado("Escuchando...")
+        gui.agregar_log("Sistema listo. Esperando palabra clave...")
+
+    nucleo.logger.info("Sistema listo. Esperando wakeword...")
+
+    while True:
+        try:
+            if gui and not gui.activo:
+                continue
+
+            if gui:
+                gui.actualizar_estado("Esperando wakeword...")
+
+            nucleo.esperar_wakeword()
+
+            nucleo.logger.info("Palabra clave detectada!")
+            if gui:
+                gui.actualizar_estado("Palabra clave detectada")
+                gui.agregar_log("✓ Palabra clave detectada")
+
+            nucleo.hablar("Sí?")
+
+            if gui:
+                gui.actualizar_estado("Grabando comando...")
+
+            config = nucleo.cargar_config()
+            audio_cmd = nucleo.grabar_audio(segundos=config["audio"]["duracion_grabacion"])
+
+            if gui:
+                gui.actualizar_estado("Transcribiendo...")
+
+            comando = nucleo.transcribir(audio_cmd)
+
+            if gui:
+                gui.actualizar_comando(comando)
+                gui.agregar_log(f"Transcripción: '{comando}'")
+
+            if comando:
+                if gui:
+                    gui.actualizar_estado("Procesando...")
+
+                accion, parametro = nucleo.consultar_ia(comando, historial)
+                nucleo.logger.info(f"Acción: {accion} | Parámetro: {parametro}")
+
+                if gui:
+                    gui.actualizar_estado("Ejecutando...")
+
+                exito, mensaje = nucleo.ejecutar_accion(accion, parametro)
+
+                if gui:
+                    gui.actualizar_respuesta(mensaje)
+                    gui.agregar_log(f"Respuesta: {mensaje}")
+
+                if gui:
+                    gui.actualizar_estado("Hablando...")
+
+                nucleo.hablar(mensaje)
+            else:
+                nucleo.hablar("No entendí nada, intentá de nuevo.")
+
+            if gui:
+                gui.actualizar_estado("Escuchando...")
+
+        except KeyboardInterrupt:
+            nucleo.logger.info("Asistente interrumpido por usuario")
+            if gui:
+                gui.agregar_log("Asistente detenido")
+            nucleo.hablar("Adiós!")
+            break
+
+        except Exception as e:
+            nucleo.logger.error(f"Error en loop principal: {e}", exc_info=True)
+            if gui:
+                gui.agregar_log(f"Error: {e}")
+            nucleo.hablar("Ocurrió un error. Intentá de nuevo.")
+
+def main():
+    """Función principal."""
+    if not inicializar_sistema():
+        nucleo.logger.error("No se pudo inicializar el sistema")
+        sys.exit(1)
+
+    config = nucleo.cargar_config()
+    if config["interfaz"]["mostrar_gui"]:
+        gui, root = crear_gui()
+        thread_asistente = threading.Thread(target=loop_principal, args=(gui,), daemon=True)
+        thread_asistente.start()
+        gui.mostrar()
+    else:
+        loop_principal(gui=None)
+
+if __name__ == "__main__":
+    main()

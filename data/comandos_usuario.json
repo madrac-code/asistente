@@ -1,0 +1,77 @@
+{
+  "version": "1.0",
+  "descripcion": "Comandos personalizados del usuario. Creables y editables desde GUI sin necesidad de reiniciar.",
+  "tipos_soportados": [
+    "abrir_url",
+    "abrir_app",
+    "escribir",
+    "secuencia",
+    "hablar"
+  ],
+  "comandos": [
+    {
+      "id": "cmd_001",
+      "nombre": "abrir jira",
+      "triggers": [
+        "jira",
+        "abrí jira",
+        "ir a jira"
+      ],
+      "tipo": "abrir_url",
+      "parametro": "https://jira.midominio.com",
+      "descripcion": "Abre Jira en el navegador",
+      "activo": true,
+      "fecha_creacion": "2024-01-01T00:00:00",
+      "fecha_modificacion": "2024-01-01T00:00:00"
+    },
+    {
+      "id": "cmd_002",
+      "nombre": "modo trabajo",
+      "triggers": [
+        "modo trabajo",
+        "inicio de jornada"
+      ],
+      "tipo": "secuencia",
+      "acciones": [
+        "abrir slack",
+        "abrir vscode",
+        "abrir navegador"
+      ],
+      "descripcion": "Abre todas las apps necesarias para trabajar",
+      "activo": true,
+      "fecha_creacion": "2024-01-01T00:00:00",
+      "fecha_modificacion": "2024-01-01T00:00:00"
+    },
+    {
+      "id": "cmd_003",
+      "nombre": "Youtube",
+      "triggers": [
+        "youtube",
+        "iutub",
+        "iu tub",
+        "abri iutube",
+        "abrir youtube",
+        "pone youtube",
+        "yudu",
+        "abedir yudu",
+        "¡avadi",
+        "you doo!",
+        "¡avadi",
+        "you doob!",
+        "¡agrí",
+        "you dove!",
+        "agadir yudu",
+        "abadi",
+        "yo tobo",
+        "yudov",
+        "yudol"
+      ],
+      "tipo": "abrir_url",
+      "parametro": "www.youtube.com",
+      "descripcion": "",
+      "activo": true,
+      "fecha_creacion": "2026-05-14T12:31:13.876327",
+      "fecha_modificacion": "2026-05-14T12:47:42.621201"
+    }
+  ]
+}

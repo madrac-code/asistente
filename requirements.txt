@@ -1,0 +1,40 @@
+# ────────────────────────────────────────────────────────────────────
+# Dependencias del Asistente Jarvis
+# ────────────────────────────────────────────────────────────────────
+# Instala con: pip install -r requirements.txt
+# ────────────────────────────────────────────────────────────────────
+
+# Transcripción de voz
+faster-whisper>=0.10.0
+
+# Detección de palabra clave
+openwakeword>=0.5.0
+
+# Captura y procesamiento de audio
+sounddevice>=0.4.6
+scipy>=1.11.0
+numpy>=1.24.0
+
+# Cliente para Ollama
+ollama>=0.1.0
+
+# Procesamiento de imágenes (para screenshot)
+Pillow>=10.0.0
+
+# Automatización de teclado y ratón
+pyautogui>=0.9.53
+pyperclip>=1.8.2
+
+# Control de volumen del sistema (Windows Core Audio API)
+pycaw>=20231004
+comtypes>=1.4.0
+
+# Teclas multimedia globales (play/pause, next, prev)
+keyboard>=0.13.5
+
+# Para futuras integraciones de IA (opcional)
+# openai>=1.3.0
+# anthropic>=0.7.0
+
+# Desarrollo y debugging (opcional)
+# pyinstaller>=6.0.0  # Para empaquetar como .exe
