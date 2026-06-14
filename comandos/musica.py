@@ -34,6 +34,10 @@ def buscar_musica(parametro):
     extensiones = ["*.mp3", "*.flac", "*.wav", "*.ogg", "*.m4a"]
     parametro = parametro.lower().strip()
 
+    # Palabras vacías/ruido: tratar como "cualquier música"
+    if parametro in ["", "desconocido", "unknown", "nada", "lo que sea", "música", "musica", "una canción", "cualquier cosa"]:
+        parametro = ""
+
     # Buscar en todas las subcarpetas y raíz
     todos = []
     for ext in extensiones:

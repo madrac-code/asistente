@@ -19,7 +19,11 @@ REM Verificar si estamos en el entorno virtual
 if not defined VIRTUAL_ENV (
 	echo [!] No estás en el entorno virtual
 	echo [*] Activando venv...
-	call C:\asistente\venv\Scripts\activate.bat
+	if exist C:\asistente\venv\Scripts\activate.bat (
+		call C:\asistente\venv\Scripts\activate.bat
+	) else (
+		call C:\asistente\venv\Scripts\activate.bat
+	)
 )
 
 REM Instalar PyInstaller
@@ -65,6 +69,7 @@ pyinstaller --onefile ^
 	--hidden-import=cffi ^
 	--hidden-import=_soundfile ^
 	--add-binary "venv\Lib\site-packages\_cffi_backend*.pyd;." ^
+	--add-data "venv\Lib\site-packages\openwakeword\resources\models;openwakeword\resources\models" ^
 	asistente.py
 
 if errorlevel 1 (

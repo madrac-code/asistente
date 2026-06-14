@@ -189,7 +189,13 @@ def transcribir(audio: 'np.ndarray') -> str:
             compute_type=config["whisper"]["compute_type"]
         )
 
-        segmentos, _ = whisper_model.transcribe(tmp_path, language=idioma)
+        segmentos, _ = whisper_model.transcribe(
+            tmp_path,
+            language=idioma,
+            beam_size=2,
+            vad_filter=True,
+            hotwords="música volumen youtube abrir cerrar poner siguiente anterior pausa silenciar fecha hora"
+        )
         texto = " ".join(s.text for s in segmentos)
 
         logger.info(f"Transcripción: {texto}")
@@ -310,14 +316,14 @@ def _consultar_ollama(comando: str, historial: List[Dict]) -> Tuple[str, str]:
         "Formato exacto: {\"accion\": \"ACCION\", \"parametro\": \"VALOR\"}\n"
         "Acciones disponibles:\n"
         "- conversar: para charla o preguntas generales. parametro = tu respuesta corta.\n"
-        "- reproducir_musica: cuando pidan poner música. parametro = nombre canción, artista o género.\n"
-        "- cerrar_ventana: cuando pidan cerrar un programa. parametro = nombre del programa.\n"
+        "- reproducir_musica: cuando pidan poner música, si no mencionan canción específica dejá parametro vacío. parametro = nombre canción, artista o género.\n"
+        "- cerrar_ventana: cuando pidan cerrar un programa (ej: 'cerrá el bloc de notas', 'cerrá la música', 'cerrá el navegador'). parametro = nombre del programa.\n"
         "- abrir_app: cuando pidan abrir algo. parametro = nombre del programa.\n"
         "- obtener_hora: cuando pidan la hora. parametro = vacio.\n"
         "- obtener_fecha: cuando pidan la fecha. parametro = vacio.\n"
         "- escribir: cuando pidan escribir algo (búsqueda, formulario, etc). parametro = texto a escribir.\n"
         "- youtube: cuando pidan youtube o buscar video. parametro = término de búsqueda (opcional).\n"
-        "- play_pause: cuando pidan pausar, reanudar o seguir la música. parametro = vacio.\n"
+        "- play_pause: cuando pidan pausar, reanudar, seguir o parar la música. parametro = vacio.\n"
         "- siguiente_cancion: cuando pidan pasar a la siguiente canción. parametro = vacio.\n"
         "- anterior_cancion: cuando pidan volver a la canción anterior. parametro = vacio.\n"
         "- cerrar_pestania: cuando pidan cerrar una pestaña del navegador. parametro = vacio.\n"

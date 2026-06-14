@@ -5,11 +5,61 @@
 # ────────────────────────────────────────────────────────────────────
 
 import sys
+import os
+import time
+import atexit
+import subprocess
+import urllib.request
+import urllib.error
 import threading
 import nucleo
 from gui import crear_gui
 
 historial = []
+_proceso_ollama = None
+
+
+def _ollama_responde() -> bool:
+    try:
+        urllib.request.urlopen("http://127.0.0.1:11434", timeout=2)
+        return True
+    except Exception:
+        return False
+
+
+def _iniciar_ollama():
+    global _proceso_ollama
+    if _ollama_responde():
+        nucleo.logger.info("Ollama ya está corriendo")
+        return
+
+    nucleo.logger.info("Iniciando Ollama...")
+    try:
+        _proceso_ollama = subprocess.Popen(
+            ["ollama", "serve"],
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL
+        )
+        for _ in range(30):
+            if _ollama_responde():
+                nucleo.logger.info("Ollama iniciado correctamente")
+                return
+            time.sleep(0.5)
+        nucleo.logger.warning("Ollama no respondió después de 15 segundos")
+    except FileNotFoundError:
+        nucleo.logger.error("Ollama no encontrado. Instalalo en https://ollama.com")
+
+
+def _detener_ollama():
+    global _proceso_ollama
+    if _proceso_ollama:
+        nucleo.logger.info("Deteniendo Ollama...")
+        _proceso_ollama.terminate()
+        try:
+            _proceso_ollama.wait(timeout=5)
+        except Exception:
+            _proceso_ollama.kill()
+        _proceso_ollama = None
 
 def inicializar_sistema():
     """Inicializa todos los componentes del asistente."""
@@ -99,6 +149,7 @@ def loop_principal(gui=None):
             if gui:
                 gui.agregar_log("Asistente detenido")
             nucleo.hablar("Adiós!")
+            _detener_ollama()
             break
 
         except Exception as e:
@@ -109,6 +160,9 @@ def loop_principal(gui=None):
 
 def main():
     """Función principal."""
+    _iniciar_ollama()
+    atexit.register(_detener_ollama)
+
     if not inicializar_sistema():
         nucleo.logger.error("No se pudo inicializar el sistema")
         sys.exit(1)
