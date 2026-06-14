@@ -18,11 +18,13 @@ echo.
 REM Verificar si estamos en el entorno virtual
 if not defined VIRTUAL_ENV (
 	echo [!] No estás en el entorno virtual
-	echo [*] Activando venv...
-	if exist C:\asistente\venv\Scripts\activate.bat (
-		call C:\asistente\venv\Scripts\activate.bat
+	echo [*] Activando env...
+	if exist "%~dp0env\Scripts\activate.bat" (
+		call "%~dp0env\Scripts\activate.bat"
 	) else (
-		call C:\asistente\venv\Scripts\activate.bat
+		echo [!] No se encontró env\Scripts\activate.bat
+		pause
+		exit /b 1
 	)
 )
 
@@ -40,7 +42,7 @@ if exist dist (
 	echo [*] Limpiando distribuciones previas...
 	rmdir /s /q dist
 	rmdir /s /q build
-	del /q asistente.spec
+	if exist Jarvis.spec del /q Jarvis.spec
 )
 
 echo.
@@ -55,8 +57,11 @@ pyinstaller --onefile ^
 	--add-data "config.json:." ^
 	--add-data "perfiles:perfiles" ^
 	--add-data "comandos:comandos" ^
+	--add-data "core:core" ^
+	--add-data "ui:ui" ^
+	--add-data "commands:commands" ^
+	--add-data "storage:storage" ^
 	--add-data "logs:logs" ^
-	--add-data "data:data" ^
 	--hidden-import=faster_whisper ^
 	--hidden-import=openwakeword ^
 	--hidden-import=sounddevice ^
@@ -68,8 +73,11 @@ pyinstaller --onefile ^
 	--hidden-import=_cffi_backend ^
 	--hidden-import=cffi ^
 	--hidden-import=_soundfile ^
-	--add-binary "venv\Lib\site-packages\_cffi_backend*.pyd;." ^
-	--add-data "venv\Lib\site-packages\openwakeword\resources\models;openwakeword\resources\models" ^
+	--hidden-import=keyboard ^
+	--hidden-import=psutil ^
+	--add-binary "env\Lib\site-packages\_cffi_backend*.pyd;." ^
+	--add-data "env\Lib\site-packages\openwakeword\resources\models;openwakeword\resources\models" ^
+	--add-data "env\Lib\site-packages\faster_whisper\assets;faster_whisper\assets" ^
 	asistente.py
 
 if errorlevel 1 (
@@ -90,8 +98,7 @@ echo.
 echo [*] Instrucciones:
 echo    1. El archivo .exe está en: dist\Jarvis.exe
 echo    2. Puedes copiarlo a cualquier carpeta
-echo    3. Requiere: config.json, perfiles\, comandos\, data\ en la misma carpeta
-echo    4. O ejecutarlo desde C:\asistente\ directamente
+echo    3. Requiere: config.json, perfiles\, core\, ui\, commands\ en la misma carpeta
 echo.
 
 echo [*] Para crear un instalador profesional:

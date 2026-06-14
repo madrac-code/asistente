@@ -69,20 +69,20 @@ def accion_obtener_contexto_proyecto() -> Tuple[bool, str, Any]:
 
 def accion_hablar(texto: str) -> Tuple[bool, str, Any]:
 	"""Hace que Jarvis hable."""
-	import nucleo
-	exito = nucleo.hablar(texto)
+	from core import hablar
+	exito = hablar(texto)
 	return exito, f"TTS: {texto}" if exito else "Error en TTS", None
 
 def accion_obtener_config() -> Tuple[bool, str, Any]:
 	"""Obtiene la configuración actual."""
-	import nucleo
-	config = nucleo.cargar_config()
+	from core import cargar_config
+	config = cargar_config()
 	return True, "Configuración cargada", config
 
 def accion_obtener_perfil() -> Tuple[bool, str, Any]:
 	"""Obtiene el perfil del usuario."""
-	import nucleo
-	perfil = nucleo.cargar_perfil()
+	from core import cargar_perfil
+	perfil = cargar_perfil()
 	return True, "Perfil cargado", perfil
 
 # ────────────────────────────────────────────────────────────────────

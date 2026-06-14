@@ -1,5 +1,5 @@
 # ────────────────────────────────────────────────────────────────────
-# Módulo de Comandos del Asistente Jarvis
+# Módulo de Comandos del Asistente JARVIS
 # ────────────────────────────────────────────────────────────────────
 # Este paquete contiene todos los comandos disponibles del asistente.
 # Cada módulo debe exponer:

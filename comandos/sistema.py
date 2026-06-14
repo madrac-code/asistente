@@ -15,7 +15,7 @@ TRIGGERS = ["volumen", "hora", "fecha", "apagar", "restart", "reiniciar", "scree
 
 def cargar_config():
     """Carga la configuración del usuario."""
-    from nucleo import cargar_config as _cargar_config
+    from core import cargar_config as _cargar_config
     return _cargar_config()
 
 def obtener_hora():

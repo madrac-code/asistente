@@ -62,7 +62,7 @@ def obtener_estructura_proyecto() -> Dict:
 
 	# Archivos principales
 	archivos_importantes = [
-		"asistente.py", "nucleo.py", "gui.py", 
+		"asistente.py", "core/", "gui.py", 
 		"config.json", "perfiles/default.json"
 	]
 	for archivo in archivos_importantes:
@@ -101,7 +101,7 @@ def obtener_estructura_proyecto() -> Dict:
 def obtener_config_ia() -> Optional[Dict]:
 	"""Obtiene información de la configuración de IA."""
 	try:
-		from nucleo import cargar_config
+		from core import cargar_config
 		config = cargar_config()
 		return {
 			"tipo_ia": config.get("modelo_ia", {}).get("tipo"),
@@ -121,7 +121,7 @@ def obtener_config_ia() -> Optional[Dict]:
 def obtener_perfil_usuario() -> Optional[Dict]:
 	"""Obtiene información del perfil del usuario."""
 	try:
-		from nucleo import cargar_perfil
+		from core import cargar_perfil
 		perfil = cargar_perfil()
 		return {
 			"nombre": perfil.get("nombre"),

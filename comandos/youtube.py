@@ -11,7 +11,7 @@ TRIGGERS = ["youtube", "you tube", "yt", "videos", "video", "buscar video"]
 
 def cargar_config():
 	"""Carga configuración y perfil del usuario."""
-	from nucleo import cargar_config as _cargar_config, cargar_perfil
+	from core import cargar_config as _cargar_config, cargar_perfil
 	return _cargar_config(), cargar_perfil()
 
 def get_navegador_predeterminado():

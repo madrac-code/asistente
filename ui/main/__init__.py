@@ -1,13 +1,21 @@
-﻿import tkinter as tk
-from tkinter import messagebox, scrolledtext, ttk
+# ────────────────────────────────────────────────────────────────────
+# Ventana Principal de la Interfaz de Usuario
+# ────────────────────────────────────────────────────────────────────
+# Ventana principal de la interfaz de usuario del asistente JARVIS.
+# Contiene el panel de monitorización y el panel de copiloto IA.
+# ────────────────────────────────────────────────────────────────────
+
+import tkinter as tk
+from tkinter import ttk, scrolledtext
 import json
 from datetime import datetime
+from core import cargar_config
 from core.utils import obtener_ruta_recurso
 
 class InterfazJarvis:
     def __init__(self, root):
         self.root = root
-        self.root.title("Asistente Jarvis")
+        self.root.title("Asistente JARVIS")
         self.root.geometry("900x650")
         self.root.configure(bg="#1e1e1e")
         self.estado_actual = "Iniciando..."
@@ -54,7 +62,6 @@ class InterfazJarvis:
         self.btn_activar = tk.Button(pb, text="Desactivar", command=self.toggle_activo, font=("Segoe UI", 9), bg="#00aa00", fg="#ffffff", padx=15, pady=5)
         self.btn_activar.pack(side=tk.LEFT, padx=5)
         tk.Button(pb, text="Comandos", command=self.abrir_gestor, font=("Segoe UI", 9), bg="#9900cc", fg="#ffffff", padx=15, pady=5).pack(side=tk.LEFT, padx=5)
-        tk.Button(pb, text="Configurar", command=self.reiniciar_setup, font=("Segoe UI", 9), bg="#ff8800", fg="#ffffff", padx=15, pady=5).pack(side=tk.LEFT, padx=5)
         tk.Button(pb, text="Limpiar Log", command=self.limpiar_log, font=("Segoe UI", 9), bg="#555555", fg="#ffffff", padx=15, pady=5).pack(side=tk.LEFT, padx=5)
         tk.Button(pb, text="Cerrar", command=self.root.quit, font=("Segoe UI", 9), bg="#aa0000", fg="#ffffff", padx=15, pady=5).pack(side=tk.RIGHT, padx=5)
 
@@ -71,18 +78,12 @@ class InterfazJarvis:
     def abrir_gestor(self):
         from ui.commands import abrir_gestor_comandos
         abrir_gestor_comandos(self.root)
-    def reiniciar_setup(self):
-        if messagebox.askyesno("Reconfigurar", "Esto va a reiniciar el asistente de configuración.\n¿Querés continuar?"):
-            from core import guardar_config
-            self.config["setup_completado"] = False
-            guardar_config(self.config)
-            self.agregar_log("Configuración reiniciada. Reiniciá el programa para volver al wizard.")
-            messagebox.showinfo("Listo", "Configuración reiniciada.\n\nCerrá y volvé a iniciar Jarvis para que aparezca el wizard.")
     def mostrar(self): self.root.mainloop()
 
+__all__ = ["InterfazJarvis", "crear_gui"]
+
+# Función para integrar en la GUI principal
 def crear_gui():
     root = tk.Tk()
     gui = InterfazJarvis(root)
     return gui, root
-
-__all__ = ["InterfazJarvis", "crear_gui"]

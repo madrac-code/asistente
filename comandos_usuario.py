@@ -15,7 +15,7 @@ from typing import Dict, List, Tuple, Optional
 
 logger = logging.getLogger(__name__)
 
-RUTA_COMANDOS_USUARIO = "data/comandos_usuario.json"
+RUTA_COMANDOS_USUARIO = "storage/user_data/comandos_usuario.json"
 
 # ────────────────────────────────────────────────────────────────────
 # Funciones de Gestión de JSON
@@ -305,8 +305,8 @@ def _ejecutar_secuencia(acciones: List[str]) -> Tuple[bool, str]:
 		else:
 			# Intentar ejecutar como comando core
 			try:
-				import nucleo
-				exito, msg = nucleo.ejecutar_accion(accion, "")
+				from core import ejecutar_accion
+				exito, msg = ejecutar_accion(accion, "")
 				resultados.append(f"✓ {msg}" if exito else f"✗ {msg}")
 			except:
 				resultados.append(f"✗ No se encontró acción: {accion}")
@@ -316,8 +316,8 @@ def _ejecutar_secuencia(acciones: List[str]) -> Tuple[bool, str]:
 def _ejecutar_hablar(texto: str) -> Tuple[bool, str]:
 	"""Hace que el asistente hable."""
 	try:
-		import nucleo
-		exito = nucleo.hablar(texto)
+		from core import hablar
+		exito = hablar(texto)
 		if exito:
 			return True, f"Jarvis dijo: {texto}"
 		else:

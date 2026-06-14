@@ -38,3 +38,6 @@ keyboard>=0.13.5
 
 # Desarrollo y debugging (opcional)
 # pyinstaller>=6.0.0  # Para empaquetar como .exe
+
+# Métricas de evaluación (para pruebas de Whisper)
+jiwer>=2.3.0

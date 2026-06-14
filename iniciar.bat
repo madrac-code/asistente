@@ -1,4 +1,4 @@
 @echo off
-call venv\Scripts\activate.bat
+call env\Scripts\activate.bat
 python asistente.py
 pause
